@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vintage Outboard Engine Parts — Redesign Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #0E0C09;
+    --rust:      #C0390F;
+    --rust-dim:  #8B2A0B;
+    --brass:     #B8892A;
+    --brass-dim: #7A5A18;
+    --fog:       #D6CFBF;
+    --parchment: #F2EDE4;
+    --steel:     #4A4740;
+    --ocean:     #1A2B38;
+    --ocean-mid: #243849;
+    --white:     #FAF8F4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--ink);
+    color: var(--parchment);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    background: rgba(14,12,9,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(184,137,42,0.2);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid var(--brass);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--brass);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .nav-logo-text strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    color: var(--white);
+  }
+
+  .nav-logo-text span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--brass);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fog);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--brass); }
+
+  .nav-cta {
+    background: var(--rust) !important;
+    color: var(--white) !important;
+    padding: 8px 18px !important;
+    border-radius: 2px !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--rust-dim) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 68px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 48px 80px 64px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--brass);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 7vw, 100px);
+    line-height: 0.92;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--rust);
+    display: block;
+  }
+
+  .hero-desc {
+    font-size: 18px;
+    color: var(--fog);
+    line-height: 1.7;
+    max-width: 420px;
+    margin-bottom: 48px;
+    font-style: italic;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--rust);
+    color: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 28px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-primary:hover {
+    background: var(--rust-dim);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--fog);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 28px;
+    border-radius: 2px;
+    border: 1px solid rgba(214,207,191,0.3);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--brass);
+    color: var(--brass);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(184,137,42,0.2);
+  }
+
+  .hero-stat .n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .hero-stat .l {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-top: 4px;
+  }
+
+  /* Hero right — visual panel */
+  .hero-right {
+    position: relative;
+    background: var(--ocean);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(184,137,42,0.06) 39px,
+        rgba(184,137,42,0.06) 40px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 39px,
+        rgba(184,137,42,0.06) 39px,
+        rgba(184,137,42,0.06) 40px
+      );
+  }
+
+  .hero-engine-graphic {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  /* SVG engine illustration */
+  .engine-svg {
+    width: 340px;
+    height: 340px;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 40px rgba(192,57,15,0.3));
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .hero-brand-tags {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .brand-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brass);
+    border: 1px solid rgba(184,137,42,0.35);
+    padding: 5px 12px;
+    border-radius: 2px;
+  }
+
+  /* ── BRAND STRIP ── */
+  .brand-strip {
+    background: var(--ocean-mid);
+    border-top: 1px solid rgba(184,137,42,0.15);
+    border-bottom: 1px solid rgba(184,137,42,0.15);
+    padding: 28px 48px;
+    overflow: hidden;
+  }
+
+  .brand-strip-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .brand-strip-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--steel);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .brand-strip-divider {
+    flex: 1;
+    height: 1px;
+    background: rgba(184,137,42,0.15);
+  }
+
+  .brand-pills {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .brand-pill {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    color: var(--fog);
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+
+  .brand-pill:hover { color: var(--rust); }
+
+  .brand-pill-sep {
+    color: rgba(184,137,42,0.3);
+    font-size: 14px;
+    align-self: center;
+  }
+
+  /* ── CATEGORIES ── */
+  .categories {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 24px;
+  }
+
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 4vw, 56px);
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 0.95;
+  }
+
+  .section-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brass);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: gap 0.2s;
+    flex-shrink: 0;
+    padding-bottom: 6px;
+  }
+
+  .section-link:hover { gap: 14px; }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 260px 260px;
+    gap: 12px;
+  }
+
+  .cat-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+
+  .cat-card:first-child {
+    grid-row: 1 / 3;
+  }
+
+  .cat-card-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s ease;
+  }
+
+  .cat-card:hover .cat-card-bg { transform: scale(1.04); }
+
+  .cat-card-bg-mercury { background: linear-gradient(145deg, #1A2B38 0%, #0E1820 60%, #1C0A05 100%); }
+  .cat-card-bg-yamaha  { background: linear-gradient(145deg, #1C1A10 0%, #2A2510 100%); }
+  .cat-card-bg-suzuki  { background: linear-gradient(145deg, #1A1015 0%, #2A1018 100%); }
+  .cat-card-bg-honda   { background: linear-gradient(145deg, #121820 0%, #0A1018 100%); }
+  .cat-card-bg-johnson { background: linear-gradient(145deg, #101A14 0%, #0A1810 100%); }
+
+  .cat-card-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(184,137,42,1) 0px,
+      rgba(184,137,42,1) 1px,
+      transparent 1px,
+      transparent 24px
+    );
+  }
+
+  .cat-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(14,12,9,0.9) 0%, rgba(14,12,9,0.2) 60%, transparent 100%);
+  }
+
+  .cat-card-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px;
+    z-index: 2;
+  }
+
+  .cat-card-icon {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 8px;
+  }
+
+  .cat-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .cat-card:first-child .cat-card-name { font-size: 48px; }
+
+  .cat-card-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--fog);
+    margin-top: 6px;
+    opacity: 0.7;
+  }
+
+  .cat-card-arrow {
+    position: absolute;
+    top: 24px; right: 24px;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(184,137,42,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brass);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateX(-8px);
+  }
+
+  .cat-card:hover .cat-card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ── STORY ── */
+  .story {
+    background: var(--ocean);
+    padding: 100px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .story::before {
+    content: '1964';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 280px;
+    color: rgba(184,137,42,0.04);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -0.02em;
+  }
+
+  .story-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .story-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 24px;
+    padding-bottom: 36px;
+    position: relative;
+  }
+
+  .timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: 0;
+    width: 1px;
+    background: rgba(184,137,42,0.2);
+  }
+
+  .timeline-dot {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--brass);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--ocean);
+    z-index: 1;
+  }
+
+  .timeline-year {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--brass);
+  }
+
+  .timeline-content h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 4px;
+    padding-top: 8px;
+  }
+
+  .timeline-content p {
+    font-size: 15px;
+    color: var(--fog);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .story-text .section-eyebrow { margin-bottom: 12px; }
+
+  .story-text .section-title { margin-bottom: 24px; }
+
+  .story-text p {
+    font-size: 17px;
+    color: var(--fog);
+    line-height: 1.75;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .story-text p strong {
+    color: var(--white);
+    font-style: normal;
+  }
+
+  .story-quote {
+    border-left: 2px solid var(--rust);
+    padding-left: 20px;
+    margin: 32px 0;
+    font-size: 19px;
+    color: var(--parchment);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ── FEATURED PRODUCTS ── */
+  .featured {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .product-card {
+    background: var(--ocean-mid);
+    border: 1px solid rgba(184,137,42,0.12);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+
+  .product-card:hover {
+    border-color: rgba(184,137,42,0.4);
+    transform: translateY(-4px);
+  }
+
+  .product-img {
+    aspect-ratio: 1;
+    background: var(--ocean);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-img-placeholder {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 0.05em;
+    color: rgba(184,137,42,0.15);
+  }
+
+  .product-brand-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: rgba(14,12,9,0.8);
+    padding: 3px 8px;
+    border-radius: 2px;
+    border: 1px solid rgba(192,57,15,0.3);
+  }
+
+  .product-info {
+    padding: 16px;
+  }
+
+  .product-sku {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--steel);
+    margin-bottom: 6px;
+  }
+
+  .product-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    color: var(--parchment);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+
+  .product-add {
+    width: 32px; height: 32px;
+    background: var(--rust);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--white);
+    transition: background 0.2s;
+  }
+
+  .product-card:hover .product-add { background: var(--rust-dim); }
+
+  /* ── TRUST ── */
+  .trust {
+    background: var(--ocean-mid);
+    border-top: 1px solid rgba(184,137,42,0.12);
+    border-bottom: 1px solid rgba(184,137,42,0.12);
+    padding: 64px 48px;
+  }
+
+  .trust-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  .trust-item {
+    text-align: center;
+  }
+
+  .trust-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .trust-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .trust-desc {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--steel);
+    line-height: 1.7;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews {
+    padding: 100px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .review-card {
+    background: var(--ocean-mid);
+    border: 1px solid rgba(184,137,42,0.12);
+    border-radius: 3px;
+    padding: 28px;
+  }
+
+  .review-stars {
+    font-size: 13px;
+    color: var(--brass);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .review-text {
+    font-size: 16px;
+    color: var(--fog);
+    line-height: 1.7;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  .review-author {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+
+  /* ── SEARCH CTA ── */
+  .search-cta {
+    margin: 0 48px 80px;
+    background: var(--rust);
+    border-radius: 3px;
+    padding: 60px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,0.05) 0px,
+      rgba(0,0,0,0.05) 1px,
+      transparent 1px,
+      transparent 20px
+    );
+  }
+
+  .search-cta-text { position: relative; z-index: 1; }
+
+  .search-cta-text .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+
+  .search-cta-text h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .search-cta-form {
+    display: flex;
+    gap: 0;
+    flex: 1;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .search-cta-form input {
+    flex: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 16px 20px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+    color: var(--white);
+    outline: none;
+    letter-spacing: 0.05em;
+  }
+
+  .search-cta-form input::placeholder { color: rgba(255,255,255,0.4); }
+
+  .search-cta-form button {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 24px;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    border-radius: 0 2px 2px 0;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-cta-form button:hover { background: var(--ocean); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: rgba(0,0,0,0.4);
+    border-top: 1px solid rgba(184,137,42,0.15);
+    padding: 60px 48px 32px;
+  }
+
+  .footer-top {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(184,137,42,0.1);
+    margin-bottom: 32px;
+  }
+
+  .footer-brand p {
+    font-size: 14px;
+    color: var(--steel);
+    line-height: 1.7;
+    margin-top: 16px;
+    max-width: 280px;
+    font-style: italic;
+  }
+
+  .footer-col h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 16px;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-col ul li a {
+    font-size: 14px;
+    color: var(--steel);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-col ul li a:hover { color: var(--fog); }
+
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--steel);
+  }
+
+  .footer-vat {
+    color: rgba(184,137,42,0.5);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+  .hero h1      { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-desc    { animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-stats   { animation: fadeUp 0.6s 0.4s ease both; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 48px 24px; }
+    .hero-right { min-height: 360px; }
+    .cat-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .cat-card:first-child { grid-row: auto; grid-column: 1 / 3; }
+    .story-inner { grid-template-columns: 1fr; gap: 48px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .trust-inner { grid-template-columns: repeat(2, 1fr); }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .search-cta { flex-direction: column; margin: 0 24px 60px; padding: 40px 32px; }
+    .categories, .featured, .reviews { padding: 60px 24px; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    footer { padding: 48px 24px 24px; }
+    .story { padding: 60px 24px; }
+    .brand-strip { padding: 20px 24px; }
+    .trust { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">VOP</div>
+    <div class="nav-logo-text">
+      <strong>Vintage Outboard Parts</strong>
+      <span>Est. 1964 · Belgium</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#brands">Mercury</a></li>
+    <li><a href="#brands">Yamaha</a></li>
+    <li><a href="#brands">Johnson / Evinrude</a></li>
+    <li><a href="#brands">Aftermarket</a></li>
+    <li><a href="#" class="nav-cta">Shop All Parts</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Est. 1964 — Texel, Netherlands</div>
+    <h1>Parts for<br>engines that<br><em>still run.</em></h1>
+    <p class="hero-desc">Three generations of outboard obsession. New, original, and quality used parts for Mercury, OMC, Yamaha, Suzuki — and the engines that deserve to keep running.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary">Browse All Parts →</a>
+      <a href="#story" class="btn-outline">Our Story</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="n">4000+</div>
+        <div class="l">Parts in stock</div>
+      </div>
+      <div class="hero-stat">
+        <div class="n">60+</div>
+        <div class="l">Years expertise</div>
+      </div>
+      <div class="hero-stat">
+        <div class="n">5</div>
+        <div class="l">Major brands</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- Outboard engine SVG illustration -->
+    <div class="hero-engine-graphic">
+      <svg class="engine-svg" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Engine body -->
+        <rect x="120" y="40" width="100" height="140" rx="8" fill="#1A2B38" stroke="#B8892A" stroke-width="1.5"/>
+        <!-- Engine top cowl -->
+        <ellipse cx="170" cy="40" rx="50" ry="16" fill="#243849" stroke="#B8892A" stroke-width="1.5"/>
+        <!-- Mercury logo circle -->
+        <circle cx="170" cy="90" r="28" fill="#0E1820" stroke="#C0390F" stroke-width="1.5"/>
+        <text x="170" y="96" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="18" fill="#C0390F" letter-spacing="1">HG</text>
+        <!-- Engine vents -->
+        <line x1="130" y1="130" x2="210" y2="130" stroke="#B8892A" stroke-width="0.75" opacity="0.5"/>
+        <line x1="130" y1="140" x2="210" y2="140" stroke="#B8892A" stroke-width="0.75" opacity="0.5"/>
+        <line x1="130" y1="150" x2="210" y2="150" stroke="#B8892A" stroke-width="0.75" opacity="0.5"/>
+        <!-- Midsection -->
+        <rect x="148" y="180" width="44" height="80" rx="4" fill="#1A2B38" stroke="#B8892A" stroke-width="1"/>
+        <!-- Lower unit -->
+        <path d="M148 260 L192 260 L200 300 Q170 320 140 300 Z" fill="#243849" stroke="#B8892A" stroke-width="1"/>
+        <!-- Propeller -->
+        <ellipse cx="170" cy="310" rx="40" ry="8" fill="none" stroke="#B8892A" stroke-width="1.5" opacity="0.6"/>
+        <ellipse cx="170" cy="310" rx="24" ry="5" fill="none" stroke="#C0390F" stroke-width="1"/>
+        <!-- Tiller handle -->
+        <path d="M220 100 Q260 100 270 130" stroke="#B8892A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="270" cy="130" r="8" fill="#C0390F" stroke="#B8892A" stroke-width="1"/>
+        <!-- Fuel line -->
+        <path d="M120 120 Q80 120 70 150 Q60 180 80 200" stroke="#4A4740" stroke-width="2" fill="none" stroke-dasharray="4 4" stroke-linecap="round"/>
+        <circle cx="80" cy="200" r="10" fill="#1A2B38" stroke="#4A4740" stroke-width="1.5"/>
+        <!-- Mounting clamps -->
+        <rect x="108" y="60" width="12" height="30" rx="2" fill="#4A4740" stroke="#B8892A" stroke-width="0.75"/>
+        <rect x="220" y="60" width="12" height="30" rx="2" fill="#4A4740" stroke="#B8892A" stroke-width="0.75"/>
+        <!-- Decorative bolts -->
+        <circle cx="132" cy="55" r="3" fill="#B8892A" opacity="0.6"/>
+        <circle cx="208" cy="55" r="3" fill="#B8892A" opacity="0.6"/>
+        <circle cx="132" cy="170" r="3" fill="#B8892A" opacity="0.6"/>
+        <circle cx="208" cy="170" r="3" fill="#B8892A" opacity="0.6"/>
+        <!-- Glow effect -->
+        <circle cx="170" cy="90" r="40" fill="rgba(192,57,15,0.08)"/>
+        <circle cx="170" cy="310" r="50" fill="rgba(184,137,42,0.05)"/>
+      </svg>
+
+      <div class="hero-brand-tags">
+        <span class="brand-tag">Mercury OEM</span>
+        <span class="brand-tag">Johnson / Evinrude</span>
+        <span class="brand-tag">Yamaha</span>
+        <span class="brand-tag">Suzuki</span>
+        <span class="brand-tag">Aftermarket</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND STRIP -->
+<div class="brand-strip">
+  <div class="brand-strip-inner">
+    <span class="brand-strip-label">Shop by brand</span>
+    <div class="brand-strip-divider"></div>
+    <div class="brand-pills">
+      <a href="#" class="brand-pill">Mercury</a>
+      <span class="brand-pill-sep">·</span>
+      <a href="#" class="brand-pill">Yamaha</a>
+      <span class="brand-pill-sep">·</span>
+      <a href="#" class="brand-pill">Suzuki</a>
+      <span class="brand-pill-sep">·</span>
+      <a href="#" class="brand-pill">Honda</a>
+      <span class="brand-pill-sep">·</span>
+      <a href="#" class="brand-pill">Johnson / Evinrude</a>
+      <span class="brand-pill-sep">·</span>
+      <a href="#" class="brand-pill">Aftermarket</a>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section>
+  <div class="categories" id="brands">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Browse by brand</p>
+        <h2 class="section-title">Your engine.<br>Our parts.</h2>
+      </div>
+      <a href="#" class="section-link">All categories →</a>
+    </div>
+    <div class="cat-grid">
+      <a href="#" class="cat-card">
+        <div class="cat-card-bg cat-card-bg-mercury"></div>
+        <div class="cat-card-pattern"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-icon">⚙ Original & OEM</div>
+          <div class="cat-card-name">Mercury</div>
+          <div class="cat-card-count">Largest collection · OEM + aftermarket</div>
+        </div>
+        <div class="cat-card-arrow">→</div>
+      </a>
+      <a href="#" class="cat-card">
+        <div class="cat-card-bg cat-card-bg-yamaha"></div>
+        <div class="cat-card-pattern"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-icon">⚙ OEM Parts</div>
+          <div class="cat-card-name">Yamaha</div>
+        </div>
+        <div class="cat-card-arrow">→</div>
+      </a>
+      <a href="#" class="cat-card">
+        <div class="cat-card-bg cat-card-bg-suzuki"></div>
+        <div class="cat-card-pattern"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-icon">⚙ OEM Parts</div>
+          <div class="cat-card-name">Suzuki</div>
+        </div>
+        <div class="cat-card-arrow">→</div>
+      </a>
+      <a href="#" class="cat-card">
+        <div class="cat-card-bg cat-card-bg-honda"></div>
+        <div class="cat-card-pattern"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-icon">⚙ OEM Parts</div>
+          <div class="cat-card-name">Honda</div>
+        </div>
+        <div class="cat-card-arrow">→</div>
+      </a>
+      <a href="#" class="cat-card">
+        <div class="cat-card-bg cat-card-bg-johnson"></div>
+        <div class="cat-card-pattern"></div>
+        <div class="cat-card-overlay"></div>
+        <div class="cat-card-content">
+          <div class="cat-card-icon">⚙ OMC</div>
+          <div class="cat-card-name">Johnson / Evinrude</div>
+        </div>
+        <div class="cat-card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section>
+  <div class="featured">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Recently added</p>
+        <h2 class="section-title">New stock.</h2>
+      </div>
+      <a href="#" class="section-link">View all 4000+ parts →</a>
+    </div>
+    <div class="products-grid">
+      <a href="#" class="product-card">
+        <div class="product-img">
+          <span class="product-img-placeholder">⚙</span>
+          <span class="product-brand-badge">Mercury</span>
+        </div>
+        <div class="product-info">
+          <div class="product-sku">10-11529M</div>
+          <div class="product-name">Mercury-Mercruiser Screw</div>
+          <div class="product-footer">
+            <span class="product-price">€10.20</span>
+            <div class="product-add">+</div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-img">
+          <span class="product-img-placeholder">⚙</span>
+          <span class="product-brand-badge">Mercury</span>
+        </div>
+        <div class="product-info">
+          <div class="product-sku">10-16200A2</div>
+          <div class="product-name">Mercury-Mercruiser Thumb-Screw</div>
+          <div class="product-footer">
+            <span class="product-price">€24.95</span>
+            <div class="product-add">+</div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-img">
+          <span class="product-img-placeholder">⚙</span>
+          <span class="product-brand-badge">Mercury</span>
+        </div>
+        <div class="product-info">
+          <div class="product-sku">10-13403</div>
+          <div class="product-name">Mercury-Mercruiser Bolt</div>
+          <div class="product-footer">
+            <span class="product-price">€4.65</span>
+            <div class="product-add">+</div>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="product-card">
+        <div class="product-img">
+          <span class="product-img-placeholder">⚙</span>
+          <span class="product-brand-badge">Yamaha</span>
+        </div>
+        <div class="product-info">
+          <div class="product-sku">YMH-00432</div>
+          <div class="product-name">Yamaha Impeller Water Pump</div>
+          <div class="product-footer">
+            <span class="product-price">€38.50</span>
+            <div class="product-add">+</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <div class="trust-icon">🔩</div>
+      <div class="trust-label">OEM & Aftermarket</div>
+      <div class="trust-desc">New, original and quality used parts — clearly labelled</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🚢</div>
+      <div class="trust-label">Ships from Belgium</div>
+      <div class="trust-desc">Fast EU shipping · WhatsApp support available</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🛠</div>
+      <div class="trust-label">60 Years Experience</div>
+      <div class="trust-desc">Three generations of outboard engine expertise</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🔍</div>
+      <div class="trust-label">Part Number Search</div>
+      <div class="trust-desc">Find by OEM part number, brand or engine model</div>
+    </div>
+  </div>
+</div>
+
+<!-- STORY -->
+<section class="story" id="story">
+  <div class="story-inner">
+    <div class="story-timeline">
+      <p class="section-eyebrow" style="margin-bottom:28px;">Our history</p>
+      <div class="timeline-item">
+        <div class="timeline-dot"><span class="timeline-year">1964</span></div>
+        <div class="timeline-content">
+          <h4>Texel Boat Rental</h4>
+          <p>My father starts a boat rental business on the island of Texel, Noord-Holland.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><span class="timeline-year">1966</span></div>
+        <div class="timeline-content">
+          <h4>Mercury Dealer</h4>
+          <p>Becomes an authorised Mercury outboard dealer — the brand that defines the business.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><span class="timeline-year">1974</span></div>
+        <div class="timeline-content">
+          <h4>Oudeschild Watersports</h4>
+          <p>Opens watersports shop in Oudeschild. Johnson, Yamaha and Honda join the portfolio.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"><span class="timeline-year">Today</span></div>
+        <div class="timeline-content">
+          <h4>Belgium — Online</h4>
+          <p>Operating from Paal-Beringen with 4000+ parts and a global customer base.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-text">
+      <p class="section-eyebrow">Why we exist</p>
+      <h2 class="section-title">Outboards in<br>our DNA.</h2>
+      <p>I grew up surrounded by <strong>2-stroke engines</strong>, watching my father keep boats running on Texel. Today, from Belgium, I continue that same passion with an extensive collection of vintage Mercury engines and a large stock of parts.</p>
+      <blockquote class="story-quote">
+        "Classic outboards don't belong on shelves — they belong running."
+      </blockquote>
+      <p>We stock <strong>new, original, and quality used parts</strong> for Mercury, OMC, Yamaha, and Suzuki. Every part is clearly labelled OEM or aftermarket — no surprises.</p>
+      <a href="#" class="btn-outline" style="margin-top:8px;display:inline-flex;">Contact us via WhatsApp →</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section>
+  <div class="reviews">
+    <div class="section-header">
+      <div>
+        <p class="section-eyebrow">Customer reviews</p>
+        <h2 class="section-title">Trusted by<br>enthusiasts.</h2>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Vintage Parts exceeded my expectations with their quality. Fast shipping from Belgium, part fit perfectly on my 1978 Mercury 50hp."</p>
+        <div class="review-author">— Adrian T.</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Fantastic service and unique parts. Found a lower unit seal kit I'd been searching for months. Highly recommend for vintage OMC engines."</p>
+        <div class="review-author">— Alex D.</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Answered my WhatsApp message within the hour and had the correct impeller kit shipped same day. This is how specialist shops should work."</p>
+        <div class="review-author">— Marc V.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH CTA -->
+<div class="search-cta">
+  <div class="search-cta-text">
+    <p class="eyebrow">Find your part</p>
+    <h3>Search 4000+<br>parts by SKU</h3>
+  </div>
+  <div class="search-cta-form">
+    <input type="text" placeholder="Enter part number e.g. 10-11529M…">
+    <button>Search →</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="nav-logo-mark">VOP</div>
+        <div class="nav-logo-text">
+          <strong>Vintage Outboard Parts</strong>
+          <span>Est. 1964 · Belgium</span>
+        </div>
+      </div>
+      <p>Three generations of outboard engine expertise. New, original, and quality used parts for Mercury, OMC, Yamaha, and Suzuki — shipped from Paal-Beringen, Belgium.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Brands</h4>
+      <ul>
+        <li><a href="#">Mercury</a></li>
+        <li><a href="#">Yamaha</a></li>
+        <li><a href="#">Suzuki</a></li>
+        <li><a href="#">Honda</a></li>
+        <li><a href="#">Johnson / Evinrude</a></li>
+        <li><a href="#">Aftermarket</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">All Parts</a></li>
+        <li><a href="#">OEM Parts</a></li>
+        <li><a href="#">Aftermarket</a></li>
+        <li><a href="#">Used Parts</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">Wisselstraat 15, Paal-Beringen</a></li>
+        <li><a href="#">Belgium</a></li>
+        <li><a href="#">WhatsApp +32 494 61 63 04</a></li>
+        <li><a href="#">Contact form</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Vintage Outboard Engine Parts · D.M.S.</span>
+    <span class="footer-vat">VAT BE08.9393.0125</span>
+  </div>
+</footer>
+
+</body>
+</html>
